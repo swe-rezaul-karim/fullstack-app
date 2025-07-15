@@ -6,8 +6,8 @@ on:
 
 env:
   REGISTRY: docker.io
-  CLIENT_IMAGE: yourusername/fullstack-client
-  SERVER_IMAGE: yourusername/fullstack-server
+  CLIENT_IMAGE: ${{ secrets.DOCKER_USERNAME }}/fullstack-client
+  SERVER_IMAGE: ${{ secrets.DOCKER_USERNAME }}/fullstack-server
 
 jobs:
   build-and-push:
