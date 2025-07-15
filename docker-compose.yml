@@ -1,0 +1,44 @@
+version: '3.8'
+services:
+  db:
+    image: postgres:14
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    networks:
+      - backend
+  
+  server:
+    build: ./server
+    environment:
+      - PORT=${SERVER_PORT}
+      - DATABASE_URL=${DATABASE_URL}
+    env_file:
+      - ./server/.env
+    depends_on:
+      - db
+    ports:
+      - "${SERVER_PORT}:${SERVER_PORT}"
+    networks:
+      - backend
+
+  client:
+    build: ./client
+    ports:
+      - "3000:3000"
+    depends_on:
+      - server
+    networks:
+      - backend
+    environment:
+      - REACT_APP_API_URL=${REACT_APP_API_URL}
+volumes:
+  db-data:
+
+networks:
+  backend:
+    name: fullstack-network
